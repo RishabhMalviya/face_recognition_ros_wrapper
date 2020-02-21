@@ -2,7 +2,7 @@
 
 import sys
 import rospy
-from face_recognition.srv import *
+from face_recognition_ros_wrapper.srv import *
 
 def recognize_faces_client(image_path):
     rospy.wait_for_service('recognize_faces')
