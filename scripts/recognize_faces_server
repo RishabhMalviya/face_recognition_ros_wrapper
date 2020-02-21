@@ -1,27 +1,28 @@
 #!/usr/bin/env python
 
-from face_recognition.srv import RecognizeFaces, RecognizeFacesResponse
+from face_recognition_ros_wrapper.srv import RecognizeFaces, RecognizeFacesResponse
 import rospy
 import cv2
 import face_recognition
 import pickle
 
 import inspect
+import os
 
 def handle_recognize_faces(req):
+    name = "Unknown" 
+
     image = cv2.imread(req.image_path)
     rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
     data = pickle.loads(open("/home/rishabh/workspace/catkin_ws/src/face_recognition_ros_wrapper/resources/encodings.pickle", "rb").read())
 
     print("Detecting faces in image: " + req.image_path)
 
-    box = face_recognition.face_locations(rgb, model='hog')[0]
-    encoding = face_recognition.face_encodings(rgb, box)[0]
-
+    boxes = face_recognition.face_locations(rgb, model='hog')
+    if not boxes:
+        return RecognizeFacesResponse(name)
+    encoding = face_recognition.face_encodings(rgb, boxes)[0]
     matches = face_recognition.compare_faces(data["encodings"], encoding)
-    name = "Unknown"
-
     if True in matches:
         matchedIdxs = [i for (i, b) in enumerate(matches) if b]
         counts = {}
@@ -32,7 +33,7 @@ def handle_recognize_faces(req):
 
         name = max(counts, key=counts.get)
 
-    return RecognizeFacesResponse("dummy_string")
+    return RecognizeFacesResponse(name)
 
 def recognize_faces_server():
     rospy.init_node("recognize_faces_server")
