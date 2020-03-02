@@ -14,7 +14,10 @@ def handle_recognize_faces(req):
 
     image = cv2.imread(req.image_path)
     rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    data = pickle.loads(open("/home/rishabh/workspace/catkin_ws/src/face_recognition_ros_wrapper/resources/encodings.pickle", "rb").read())
+    
+    face_encodings_file = rospy.get_param("face_encodings_location")
+    
+    data = pickle.loads(open(face_encodings_file, "rb").read())
 
     print("Detecting faces in image: " + req.image_path)
 

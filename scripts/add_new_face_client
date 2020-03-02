@@ -6,9 +6,12 @@ from face_recognition_ros_wrapper.srv import *
 
 def recognize_faces_client(image_path, new_name):
     rospy.wait_for_service('register_new_face')
+    print("Found server service")
     try:
-        recognize_faces = rospy.ServiceProxy('register_new_face', RegisterNewFace)
-        resp1 = recognize_faces(image_path, new_name)
+        register_new_face = rospy.ServiceProxy('register_new_face', RegisterNewFace)
+        print("Created service proxy")
+        resp1 = register_new_face(image_path, new_name)
+        print("Registered new face")
         return resp1.success_status
     except rospy.ServiceException as e:
         print("Service call failed: " + str(e))

@@ -14,7 +14,9 @@ def handle_register_new_face(req):
     image = cv2.imread(req.image_path)
     rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-    data = defaultdict(list, pickle.loads(open("/home/rishabh/workspace/catkin_ws/src/face_recognition_ros_wrapper/resources/encodings.pickle", "rb").read()))
+    face_encodings_file = rospy.get_param("face_encodings_location")
+
+    data = defaultdict(list, pickle.loads(open(face_encodings_file, "rb").read()))
     known_names = data["names"]
     known_encodings = data["encodings"]
 
@@ -27,7 +29,7 @@ def handle_register_new_face(req):
     known_names.append(req.person_name)
     known_encodings.append(encoding)
         
-    f = open("/home/rishabh/workspace/catkin_ws/src/face_recognition_ros_wrapper/resources/encodings.pickle", "wb") 
+    f = open(face_encodings_file, "wb") 
     f.write(pickle.dumps(dict(data)))
     f.close()
 

@@ -1,0 +1,5 @@
+<launch>
+	<rosparam command="load" file="$(find face_recognition_ros_wrapper)/resources/params.yaml"/>
+	<node name="add_new_face_server" pkg="face_recognition_ros_wrapper" type="add_new_face_server" output="screen"/>
+	<node name="recognize_faces_server" pkg="face_recognition_ros_wrapper" type="recognize_faces_server" output="screen"/>
+</launch>
