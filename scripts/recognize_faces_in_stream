@@ -2,25 +2,80 @@
 
 import rospy
 import sys
+import cv2
+import face_recognition
+import pickle
+from cv_bridge import CvBridge, CvBridgeError
+
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 
 
-def recognize_faces_callback(data):
-    name = "Unknown" 
+class face_recognizer:
+    def __init__(self):
+        self.pub = rospy.Publisher('recognized_faces', String, queue_size=10)
+        self.sub = rospy.Subscriber(
+            rospy.get_param(rospy.resolve_name("~camera_stream_topic")), 
+            Image, 
+            self.recognize_faces_callback)
 
-    pub.publish(name)
+        self.encodings_data = self.init_encodings_dict()
 
-if __name__ == "__main__":
+        self.bridge = CvBridge()
+
+    def init_encodings_dict(self):
+        face_encodings_file = rospy.get_param("face_encodings_location")    
+        encodings_data = pickle.loads(open(face_encodings_file, "rb").read())
+
+        return encodings_data
+
+    def recognize_faces_callback(self, data):
+        cv_image = self.convert_image(data)
+        name = self.get_face_match(cv_image)
+
+        if name is not None:
+            self.pub.publish(name)
+
+    def convert_image(self, data):
+        try:
+            return self.bridge.imgmsg_to_cv2(data, "rgb8")
+        except CvBridgeError as e:
+            print(e)
+
+    def get_face_match(self, cv_image):
+        boxes = face_recognition.face_locations(cv_image, model='hog')
+        if not boxes:
+            return None
+        else:
+            encoding = face_recognition.face_encodings(cv_image, boxes)[0]
+    
+        matches = face_recognition.compare_faces(self.encodings_data["encodings"], encoding)
+        if True in matches:
+            matchedIdxs = [i for (i, b) in enumerate(matches) if b]
+            counts = {}
+
+            for i in matchedIdxs:
+                name = self.encodings_data["names"][i]
+                counts[name] = counts.get(name, 0) + 1
+
+            name = max(counts, key=counts.get)
+
+            return name
+        else:
+            return None
+
+def main(args):
     try:
         rospy.init_node('stream_face_recognizer')
 
-        pub = rospy.Publisher('recognized_faces', String, queue_size=10)
-
-        camera_stream_topic = rospy.get_param(rospy.resolve_name("~camera_stream_topic"))
-        rospy.Subscriber(camera_stream_topic, Image, recognize_faces_callback)
+        face_recognizer_object = face_recognizer()
         print("Ready to recognize faces in video stream")
+
         rospy.spin()
 
     except rospy.ROSInterruptException as e:
         print(e)
+
+
+if __name__ == "__main__":
+    main(sys.argv)
