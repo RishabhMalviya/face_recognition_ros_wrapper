@@ -22,27 +22,27 @@ def handle_register_new_face(req):
 
     print("Registering new face from given image: " + req.image_path + "\nwith name: " + req.person_name)
 
- #   try:
-    boxes = face_recognition.face_locations(rgb, model='hog')
-    encoding = face_recognition.face_encodings(rgb, boxes)[0]
-        
-    known_names.append(req.person_name)
-    known_encodings.append(encoding)
-        
-    f = open(face_encodings_file, "wb") 
-    f.write(pickle.dumps(dict(data)))
-    f.close()
+    try:
+        boxes = face_recognition.face_locations(rgb, model='hog')
+        encoding = face_recognition.face_encodings(rgb, boxes)[0]
+            
+        known_names.append(req.person_name)
+        known_encodings.append(encoding)
+            
+        f = open(face_encodings_file, "wb") 
+        f.write(pickle.dumps(dict(data)))
+        f.close()
 
-    success = True
-#    except Exception as e:
-  #      print("Something went wrong: " + str(e))
+        success = True
+    except e as Exception:
+        print("Something went wrong: " + str(e))
 
     return RegisterNewFaceResponse(success)
 
 def register_new_face_server():
     rospy.init_node("register_new_face_server")
 
-    s = rospy.Service('register_new_face', RegisterNewFace, handle_register_new_face)
+    rospy.Service('register_new_face', RegisterNewFace, handle_register_new_face)
     print("Ready to register new faces")
     rospy.spin()
 
