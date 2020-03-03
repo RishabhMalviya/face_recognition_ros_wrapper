@@ -41,6 +41,7 @@ def handle_register_new_face(req):
 
 def register_new_face_server():
     rospy.init_node("register_new_face_server")
+
     s = rospy.Service('register_new_face', RegisterNewFace, handle_register_new_face)
     print("Ready to register new faces")
     rospy.spin()

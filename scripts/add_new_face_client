@@ -9,9 +9,7 @@ def recognize_faces_client(image_path, new_name):
     print("Found server service")
     try:
         register_new_face = rospy.ServiceProxy('register_new_face', RegisterNewFace)
-        print("Created service proxy")
         resp1 = register_new_face(image_path, new_name)
-        print("Registered new face")
         return resp1.success_status
     except rospy.ServiceException as e:
         print("Service call failed: " + str(e))
