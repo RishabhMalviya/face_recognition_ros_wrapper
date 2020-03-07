@@ -15,7 +15,7 @@ class face_recognizer:
     def __init__(self):
         self.pub = rospy.Publisher('recognized_faces', String, queue_size=10)
         self.sub = rospy.Subscriber(
-            rospy.get_param(rospy.resolve_name("~camera_stream_topic")), 
+            rospy.get_param(rospy.resolve_name("~video_stream_topic")), 
             Image, 
             self.recognize_faces_callback)
 
