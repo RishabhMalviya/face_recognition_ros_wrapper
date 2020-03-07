@@ -1,7 +1,7 @@
 <launch>
 	<arg name="camera_name" default="laptop_webcam" />
 
-	<rosparam command="load" file="$(find face_recognition_ros_wrapper)/config/params.yaml"/>
+	<rosparam command="load" file="$(find face_recognition_ros_wrapper)/config/params.yaml" subst_value="true"/>
 
 	<include file="$(find video_stream_opencv)/launch/camera.launch" >
 	    <arg name="camera_name" value="$(arg camera_name)" />
