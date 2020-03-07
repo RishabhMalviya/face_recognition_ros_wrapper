@@ -9,6 +9,6 @@
 	</include>
 
 	<node name="video_stream_face_recognition_service" pkg="face_recognition_ros_wrapper" type="recognize_faces_in_stream" output="screen">
-		<param name="camera_stream_topic" type="string" value="$(arg camera_name)/image_raw"/>
+		<param name="video_stream_topic" type="string" value="$(arg camera_name)/image_raw"/>
 	</node>
 </launch>
