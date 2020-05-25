@@ -4,8 +4,8 @@
 	<rosparam command="load" file="$(find face_recognition_ros_wrapper)/config/params.yaml" subst_value="true"/>
 
 	<include file="$(find video_stream_opencv)/launch/camera.launch" >
-	    <arg name="camera_name" value="$(arg camera_name)" />
-        <arg name="video_stream_provider" value="0" />
+		<arg name="camera_name" value="$(arg camera_name)" />
+		<arg name="video_stream_provider" value="0" />
 	</include>
 
 	<node name="video_stream_face_recognition_service" pkg="face_recognition_ros_wrapper" type="recognize_faces_in_stream" output="screen">
