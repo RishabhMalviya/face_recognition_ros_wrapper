@@ -38,7 +38,14 @@ All ROS Python scripts/nodes in this package are present in the folder `scripts`
 
 ### ROS Package Dependencies
 
-You will require [this ROS package](https://github.com/ros-drivers/video_stream_opencv) if you want to recognize faces in the video stream from your webcam. Clone it into your catkin workspace and build, following instruction analogous to the ones given at the top of this README. Refer to the [wiki for this ROS package](http://wiki.ros.org/video_stream_opencv) for any further clarifications.
+If you want to recognize faces in realtime from your webcam, you will require [this ROS package](https://github.com/ros-drivers/video_stream_opencv). Clone it into your catkin workspace and build:
+
+    cd /path/to/catkin_ws/src
+    git clone https://github.com/ros-drivers/video_stream_opencv.git
+    cd ../
+    catkin_make
+
+Refer to the [wiki for this ROS package](http://wiki.ros.org/video_stream_opencv) for any further clarifications.
 
 
 ## Running the Code
