@@ -26,7 +26,7 @@ The following command should install everything in the correct directories for m
     pip install dlib
     pip install face_recognition
 
-The first command will install the `.so` files and the Python wrappers for [dlib](http://dlib.net/).
+The first command will install the `.so` files and the Python wrappers for [dlib](http://dlib.net/) (which is actually a C++ library for Deep Learning & Computer Vision).
 
 The second will install the [face_recognition](https://github.com/ageitgey/face_recognition) package.
 
